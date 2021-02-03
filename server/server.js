@@ -1,59 +1,41 @@
-require('./config/config');
+ require('./config/config');
+ const express = require('express');
+ const mongoose = require('mongoose');
 
 
-const express = require('express');
-const app = express();
 
-const bodyParser = require('body-parser');
+ const app = express();
 
-//  analizar la aplicación / x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-
-//  analizar la aplicación / json
-app.use(bodyParser.json())
+ const bodyParser = require('body-parser');
 
 
-app.get('/usuario', function(req, res) {
-    res.json('get Usuario');
-})
-app.post('/usuario', function(req, res) {
+ //  analizar la aplicación / x-www-form-urlencoded
+ app.use(bodyParser.urlencoded({ extended: false }))
 
-    // este body es lo que va aparecer cuando nosotros procesemos o mejor dicho,
-    // cuando el body paser, procese cualquier payload que reciba de las peticiones de arriba,
-    // bodyPaser
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-        });
-    } else {
-        res.json({
-            persona: body
-        })
-    }
+ //  analizar la aplicación / json
+ app.use(bodyParser.json())
 
 
-    res.json({
-        persona: body
-    });
-});
+ app.use(require('./routes/usuario'));
 
-app.put('/usuario/:id', function(req, res) {
 
-    // Aesta variable yo le puse ide pero es mejor ponerle id, pero es para no confundirme
-    // porque normalmente le ponen id a todo 
-    let ide = req.params.id;
-    res.json({
-        ide
-    });
-})
 
-app.delete('/usuario', function(req, res) {
-    res.json('delete Usuario');
-})
+ // en el localhost, definiendo el puerto donde esta corriendo nuestra base de datos mongodb
+ mongoose.connect(process.env.URLDB, {
+     useNewUrlParser: true,
+     useCreateIndex: true,
+     useUnifiedTopology: true
+ }, (err, res) => {
 
-app.listen(process.env.PORT, () => {
-    console.log('escuchando el puerto', process.env.PORT);
-});
+     if (err) throw err;
+
+     console.log('Base de datos ONLINE');
+
+
+ });
+
+
+
+ app.listen(process.env.PORT, () => {
+     console.log('escuchando el puerto', process.env.PORT);
+ });
