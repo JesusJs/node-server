@@ -21,10 +21,7 @@
 
 
  // en el localhost, definiendo el puerto donde esta corriendo nuestra base de datos mongodb
- mongoose.connect(process.env.URLDB, {
-     useNewUrlParser: true,
-     useCreateIndex: true
- }, (err, res) => {
+ mongoose.connect(process.env.URLDB, (err, res) => {
 
      if (err) throw err;
 
